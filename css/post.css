@@ -1,0 +1,113 @@
+#articleContent h1::before,
+#articleContent h2::before,
+#articleContent h3::before,
+#articleContent h4::before,
+#articleContent h5::before,
+#articleContent h6::before {
+    display: block;
+    content: " ";
+    height: 100px;
+    margin-top: -100px;
+    visibility: hidden;
+}
+
+#articleContent :focus {
+    outline: none;
+}
+
+.toc-fixed {
+    position: fixed;
+    top: 64px;
+}
+/*
+.toc-widget {
+    width: 345px;
+    padding-left: 20px;
+}
+*/
+.toc-widget {
+    width: 340px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 35px 2px rgba(0, 0, 0, .15), 0 5px 15px rgba(0, 0, 0, .07), 0 2px 5px -5px rgba(0, 0, 0, .1) !important;
+}
+
+.toc-widget .toc-title {
+    padding: 35px 0 15px 17px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.5rem;
+}
+
+.toc-widget ol {
+    padding: 0;
+    list-style: none;
+}
+
+#toc-content {
+    padding-bottom: 30px;
+    overflow: auto;
+}
+
+#toc-content ol {
+    padding-left: 10px;
+}
+
+#toc-content ol li {
+    padding-left: 10px;
+}
+
+#toc-content .toc-link:hover {
+    color: #42b983;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+#toc-content .toc-link::before {
+    background-color: transparent;
+    max-height: 25px;
+    position: absolute;
+    right: 23.5vw;
+    display: block;
+}
+
+#toc-content .is-active-link {
+    color: #42b983;
+    position: relative;
+}
+
+#toc-content .is-active-link::before {
+    /*background-color: #42b983;
+    left: 10px; /* 设置伪元素距离目录链接右侧的距离为 10 像素 */
+    background-color: #42b983;
+    left: -20px; /* 将伪元素位置调整为与链接文本左对齐 */
+    position: absolute;
+    content: "";
+    width: 2px; /* 伪元素宽度 */
+    height: 150%; /* 伪元素高度 */
+    top: -25%; /* 向上移动25% */
+}
+
+#floating-toc-btn {
+    position: fixed;
+    right: 15px;
+    bottom: 76px;
+    padding-top: 15px;
+    margin-bottom: 0;
+    z-index: 998;
+}
+
+#floating-toc-btn .btn-floating {
+    width: 48px;
+    height: 48px;
+}
+
+#floating-toc-btn .btn-floating i {
+    line-height: 48px;
+    font-size: 1.4rem;
+}
