@@ -419,21 +419,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-08-18
+                    2024-08-20
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    20.6k
+                    21.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    81 分
+                    84 分
                 </div>
                 
 
@@ -1607,7 +1607,34 @@ Vue.use(ElementUI);<span aria-hidden="true" class="line-numbers-rows"><span></sp
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240810211620.png" alt="" /></li>
 </ul>
 </li>
-<li><strong>依赖冲突</strong>：当依赖传递时，如果存在多个依赖，且依赖的版本号不同，则存在依赖冲突。</li>
+<li><strong>依赖冲突</strong>：当依赖传递时，如果存在多个依赖，且依赖的版本号不同，则存在依赖冲突。<br />
+当直接引用或者间接引用出现了相同的jar包! 这时呢，一个项目就会出现相同的重复jar包，这就算作冲突！依赖冲突避免出现重复依赖，并且终止依赖传递！<br />
+<img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240819174427.png" alt="" /><br />
+maven自动解决依赖冲突问题能力，会按照自己的原则，进行重复依赖选择。同时也提供了手动解决的冲突的方式，不过不推荐！<br />
+<strong>解决依赖冲突（如何选择重复依赖）方式：</strong>
+<ul>
+<li>短路优先原则（第一原则）<br />
+A—&gt;B—&gt;C—&gt;D—&gt;E—&gt;X(version 0.0.1)<br />
+A—&gt;F—&gt;X(version 0.0.2)<br />
+则A依赖于X(version 0.0.2)。</li>
+<li>依赖路径长度相同情况下，则“先声明优先”（第二原则）<br />
+A—&gt;E—&gt;X(version 0.0.1)<br />
+A—&gt;F—&gt;X(version 0.0.2)<br />
+在&lt;depencies&gt;\……</depencies>中，先声明的，路径相同，会优先选择！</li>
+</ul>
+</li>
+</ul>
+<p><strong>小测试</strong>：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">前提：
+   A 1.1 -> B 1.1 -> C 1.1 
+   F 2.2 -> B 2.2 
+   
+pom声明：
+   F 2.2
+   A 1.1 
+   B 2.2 
+   C不会被引入<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
 <li><strong>排除依赖</strong>：当依赖传递时，如果存在依赖冲突，可以通过<code>&lt;exclusions&gt;</code>标签，排除依赖。<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240810211807.png" alt="" /></li>
 <li><strong>依赖范围</strong>：<br />
@@ -1624,6 +1651,41 @@ Maven中有3套<font color="red">相互独立</font>的生命周期：</p>
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240810212739.png" alt="" /><br />
 <strong>执行指定生命周期的两种方式</strong>：<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240810212837.png" alt="" /></li>
+</ul>
+<h3 id="26-项目结构"><a class="markdownIt-Anchor" href="#26-项目结构"></a> 2.6 项目结构</h3>
+<p>Maven 是一个强大的构建工具，它提供一种标准化的项目结构，可以帮助开发者更容易地管理项目的依赖、构建、测试和发布等任务。以下是 Maven Web 程序的文件结构及每个文件的作用：</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">|-- pom.xml                               # Maven 项目管理文件 
+|-- src
+    |-- main                              # 项目主要代码
+    |   |-- java                          # Java 源代码目录
+    |   |   `-- com/example/myapp         # 开发者代码主目录
+    |   |       |-- controller            # 存放 Controller 层代码的目录
+    |   |       |-- service               # 存放 Service 层代码的目录
+    |   |       |-- dao                   # 存放 DAO 层代码的目录
+    |   |       `-- model                 # 存放数据模型的目录
+    |   |-- resources                     # 资源目录，存放配置文件、静态资源等
+    |   |   |-- log4j.properties          # 日志配置文件
+    |   |   |-- spring-mybatis.xml        # Spring Mybatis 配置文件
+    |   |   `-- static                    # 存放静态资源的目录
+    |   |       |-- css                   # 存放 CSS 文件的目录
+    |   |       |-- js                    # 存放 JavaScript 文件的目录
+    |   |       `-- images                # 存放图片资源的目录
+    |   `-- webapp                        # 存放 WEB 相关配置和资源
+    |       |-- WEB-INF                   # 存放 WEB 应用配置文件
+    |       |   |-- web.xml               # Web 应用的部署描述文件
+    |       |   `-- classes               # 存放编译后的 class 文件
+    |       `-- index.html                # Web 应用入口页面
+    `-- test                              # 项目测试代码
+        |-- java                          # 单元测试目录
+        `-- resources                     # 测试资源目录<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>pom.xml</strong>：Maven 项目管理文件，用于描述项目的依赖和构建配置等信息。</li>
+<li><strong>src/main/java</strong>：存放项目的 Java 源代码。</li>
+<li><strong>src/main/resources</strong>：存放项目的资源文件，如配置文件、静态资源等。</li>
+<li><strong>src/main/webapp/WEB-INF</strong>：存放 Web 应用的配置文件。</li>
+<li><strong>src/main/webapp/index.html</strong>：Web 应用的入口页面。</li>
+<li><strong>src/test/java</strong>：存放项目的测试代码。</li>
+<li><strong>src/test/resources</strong>：存放测试相关的资源文件，如测试配置文件等。</li>
 </ul>
 <h2 id="3http"><a class="markdownIt-Anchor" href="#3http"></a> 3.HTTP</h2>
 <h3 id="31-概念"><a class="markdownIt-Anchor" href="#31-概念"></a> 3.1 概念</h3>
@@ -3283,7 +3345,8 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 </blockquote>
 <h3 id="153-版本锁定"><a class="markdownIt-Anchor" href="#153-版本锁定"></a> 15.3 版本锁定</h3>
 <ul>
-<li>在maven中，可以在父工程的pom文件中通过<b><code>&lt;dependencyManagement&gt;</code></b>来统一管理依赖版本。<br />
+<li>在maven中，可以在父工程的pom文件中通过<b><code>&lt;dependencyManagement&gt;</code></b>来统一管理依赖版本。</li>
+<li><b><code>&lt;dependencyManagement&gt;</code></b> 是用来管理依赖版本的，它用于声明依赖的版本，但这些依赖不会自动导入到项目中，还需要再<b>&lt;dependencies&gt;</b>中引入。<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240818202248.png" alt="" /></li>
 </ul>
 <blockquote><p><strong>注意事项</strong>：</p>
@@ -3818,7 +3881,7 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">105.8k</span>
+                        class="white-color">106.6k</span>
             
             
             
