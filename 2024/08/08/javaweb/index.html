@@ -419,21 +419,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-08-20
+                    2024-08-23
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    21.3k
+                    23.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    84 分
+                    92 分
                 </div>
                 
 
@@ -2068,6 +2068,16 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 </ul>
 </li>
 </ul>
+<blockquote>
+<p><strong>总结</strong>：</p>
+<ul>
+<li>动态值 使用 #{key}，动态的列名、容器名、关键字等使用 ${……}。</li>
+<li>？只能替代值的位置，不能替代标签、列名、表名、关键字等。emp_id = ? ，不能写 ？= ?</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//注解方式传入参数！！</span>
+<span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from user where $&#123;column&#125; = #&#123;value&#125;"</span><span class="token punctuation">)</span>
+<span class="token class-name">User</span> <span class="token function">findByColumn</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Param</span><span class="token punctuation">(</span><span class="token string">"column"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> column<span class="token punctuation">,</span> <span class="token annotation punctuation">@Param</span><span class="token punctuation">(</span><span class="token string">"value"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</blockquote>
 <h4 id="842-预编译sql"><a class="markdownIt-Anchor" href="#842-预编译sql"></a> 8.4.2 预编译SQL</h4>
 <p><strong>优势</strong>：</p>
 <ul>
@@ -2167,15 +2177,40 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 <li><strong>起别名</strong>：在SQL语句中，对不一样的列名器别名，别名和实体类中的属性名一致。(<code>as</code>可以省略)<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select id, username, gender, email, dept_id as deptId from emp where id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token class-name">Emp</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
-<li><strong>手动结果映射</strong>：通过<b><code>@Results</code></b>和<b><code>@Result</code></b>注解，手动映射。<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from emp where id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+<li><strong>手动结果映射</strong>：
+<ul>
+<li>通过<b><code>@Results</code></b>和<b><code>@Result</code></b>注解，手动映射。</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from emp where id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
 <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
   <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"dept_id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"deptId"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"create_time"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"createTime"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
   <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"update_time"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"updateTime"</span><span class="token punctuation">)</span>
 <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token class-name">Emp</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>通过<b><code>&lt;resultMap&gt;</code></b>标签定义对应关系，再在后面的SQL语句中引用这个对应关系</li>
+</ul>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- 专门声明一个resultMap设定column到property之间的对应关系 --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resultMap</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectEmployeeByRMResultMap<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.atguigu.mybatis.entity.Employee<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+  <span class="token comment">&lt;!-- 使用id标签设置主键列和主键属性之间的对应关系 --></span>
+  <span class="token comment">&lt;!-- column属性用于指定字段名；property属性用于指定Java实体类属性名 --></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>emp_id<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empId<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+  <span class="token comment">&lt;!-- 使用result标签设置普通字段和Java实体类属性之间的关系 --></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>emp_name<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empName<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>emp_salary<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empSalary<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>resultMap</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- Employee selectEmployeeByRM(Integer empId); --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectEmployeeByRM<span class="token punctuation">"</span></span> <span class="token attr-name">resultMap</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectEmployeeByRMResultMap<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
-<li><strong>开启驼峰命名</strong>：如果字段名与属性名符合驼峰命名法则，mybatis会自动通过驼峰命名规则映射。<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># 在application.yml中，开启驼峰命名自动映射开关。即从数据库字段名a_column映射到实体类属性名aCloumn。</span>
+<li><strong>开启驼峰命名</strong>：如果字段名与属性名符合驼峰命名法则，mybatis会自动通过驼峰命名规则映射。<br />
+主要用于单层级的字段映射。它不能自动处理更复杂的场景，例如多层级的嵌套对象或深层次的属性名转换。<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># 在application.yml中，开启驼峰命名自动映射开关。即从数据库字段名a_column映射到实体类属性名aCloumn。</span>
 <span class="token key atrule">mybatis</span><span class="token punctuation">:</span>
 <span class="token key atrule">configuration</span><span class="token punctuation">:</span>
   <span class="token comment"># 配置mybatis的日志, 指定输出到控制台</span>
@@ -2502,7 +2537,7 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 </li>
 <li>
 <p><b><code>@ConfigurationProperties</code> 注解 </b><br />
-<code>@ConfigurationProperties</code>注解用于将一组相关的配置属性映射到Java类的字段中。它更适合用来绑定大量的、结构化的配置属性。</p>
+<code>@ConfigurationProperties</code>用于将<strong>一组相关的配置属性</strong>绑定到一个Java类的属性上。它可以将配置文件中的属性自动映射到类的字段中，尤其适用于需要处理一组复杂或嵌套配置的场景。</p>
 <ol>
 <li><strong>基本语法</strong>：<br />
 定义一个类来对应配置文件中的一组属性：</li>
@@ -2526,7 +2561,7 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
     <span class="token comment">// 其他配置</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>或者在配置类上直接使用<code>@Component</code>：</p>
- <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Component</span>
+ <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Component</span> <span class="token comment">// 如果已经在配置类中使用了@EnableConfigurationProperties，则不需要再使用@Component</span>
 <span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"app"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppProperties</span> <span class="token punctuation">&#123;</span>
     <span class="token comment">// fields, getters, setters</span>
@@ -2571,6 +2606,68 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 <ul>
 <li>当需要注入单个或少量的配置值时，使用<code>@Value</code>。</li>
 <li>当需要注入大量相关配置或希望将配置分组时，使用<code>@ConfigurationProperties</code>。</li>
+</ul>
+</blockquote>
+<p>在Spring框架中，<code>@PropertySource</code>和<code>@ConfigurationProperties</code>都涉及配置属性的管理，但它们的作用和使用场景有所不同，不能简单地认为它们是类似的。<br />
+<strong><code>@PropertySource</code>的作用</strong></p>
+<ul>
+<li><strong>用途</strong>：<code>@PropertySource</code>主要用于<strong>加载自定义的属性文件</strong>（如<code>.properties</code>文件）到Spring的<code>Environment</code>中。通过这个注解，Spring能够识别和使用这些属性文件中的键值对。</li>
+<li><strong>典型场景</strong>：
+<ul>
+<li>
+<p>当你的配置文件不是默认的<code>application.properties</code>或<code>application.yml</code>，而是自定义的文件时，需要用<code>@PropertySource</code>来加载这个文件。</p>
+</li>
+<li>
+<p>例如，如果你有一个名为<code>custom.properties</code>的文件，且希望Spring加载其中的配置项，那么可以使用<code>@PropertySource</code>注解：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@PropertySource</span><span class="token punctuation">(</span><span class="token string">"classpath:custom.properties"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 配置类内容</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+<li><strong>配合<code>@Value</code>使用</strong>：<code>@PropertySource</code>通常与<code>@Value</code>注解配合使用，从加载的属性文件中读取具体的属性值并注入到Bean的字段中。</li>
+</ul>
+<p><strong><code>@ConfigurationProperties</code>的作用</strong></p>
+<ul>
+<li><strong>用途</strong>：<code>@ConfigurationProperties</code>用于将<strong>一组相关的配置属性</strong>绑定到一个Java类的属性上。它可以将配置文件中的属性自动映射到类的字段中，尤其适用于需要处理一组复杂或嵌套配置的场景。</li>
+<li><strong>典型场景</strong>：
+<ul>
+<li>当你有一组相关的配置项，比如与应用程序、数据库、消息队列等相关的多个配置项时，可以使用<code>@ConfigurationProperties</code>将这些配置项整合到一个专门的配置类中。</li>
+<li>例如，假设有以下配置：<pre class="line-numbers language-properties" data-language="properties"><code class="language-properties"><span class="token key attr-name">app.name</span><span class="token punctuation">=</span><span class="token value attr-value">MyApp</span>
+<span class="token key attr-name">app.version</span><span class="token punctuation">=</span><span class="token value attr-value">1.0.0</span>
+<span class="token key attr-name">app.details.description</span><span class="token punctuation">=</span><span class="token value attr-value">This is a description</span>
+<span class="token key attr-name">app.details.author</span><span class="token punctuation">=</span><span class="token value attr-value">John Doe</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+可以使用<code>@ConfigurationProperties</code>将这些属性映射到类中：<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"app"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppProperties</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> version<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Details</span> details <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Details</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Details</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">private</span> <span class="token class-name">String</span> description<span class="token punctuation">;</span>
+        <span class="token keyword">private</span> <span class="token class-name">String</span> author<span class="token punctuation">;</span>
+        <span class="token comment">// Getters and Setters</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// Getters and Setters</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong><code>@PropertySource</code> vs. <code>@ConfigurationProperties</code></strong></p>
+<ul>
+<li><strong><code>@PropertySource</code></strong>：负责告诉Spring从哪里加载配置文件，并与<code>@Value</code>结合使用，允许单独注入具体的配置值。<code>@PropertySource</code>只加载属性文件，不负责属性的绑定和注入。</li>
+<li><strong><code>@ConfigurationProperties</code></strong>：负责将一组相关的配置属性映射到一个Java类中，通常用于处理结构化的、较复杂的配置。<code>@ConfigurationProperties</code>不仅加载属性，还绑定它们到类的字段上，使配置的管理更加方便和结构化。</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>相似点</strong>：两者都与配置属性的处理有关，但<code>@PropertySource</code>更侧重于属性文件的加载，而<code>@ConfigurationProperties</code>侧重于属性值的绑定和管理。</li>
+<li><strong>使用场景不同</strong>：<code>@PropertySource</code>用于从自定义的文件加载属性，而<code>@ConfigurationProperties</code>则用于将这些属性整合到Java类中进行统一管理。</li>
 </ul>
 </blockquote>
 <h3 id="98-登录校验"><a class="markdownIt-Anchor" href="#98-登录校验"></a> 9.8 登录校验</h3>
@@ -2958,18 +3055,31 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 </ul>
 <h3 id="102-spring事务管理"><a class="markdownIt-Anchor" href="#102-spring事务管理"></a> 10.2 Spring事务管理</h3>
 <ul>
-<li><strong>注解</strong>：<b><code>@Transactional</code></b></li>
-<li><strong>位置</strong>：业务(Service)层的方法上、类上、接口上</li>
-<li><strong>作用</strong>：将当前方法交给Spring进行事务管理，方法执行前，开启事务；成功执行完毕，提交事务；出现异常，回滚事务<br />
-<img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240817205221.png" alt="" /></li>
-<li><strong>属性</strong>：
+<li>
+<p><strong>注解</strong>：<b><code>@Transactional</code></b></p>
+</li>
+<li>
+<p><strong>位置</strong>：业务(Service)层的方法上、类上、接口上</p>
+</li>
+<li>
+<p><strong>作用</strong>：将当前方法交给Spring进行事务管理，方法执行前，开启事务；成功执行完毕，提交事务；出现异常，回滚事务<br />
+<img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240817205221.png" alt="" /></p>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
 <ul>
-<li><b><code>rollbackFor</code>回滚</b>：默认情况下，只有出现<b><code>RuntimeException</code></b>才会回滚异常，<code>rollbackFor</code>属性用于控制出现何种异常类型，回滚事务<br />
+<li><b><code>rollbackFor</code>回滚</b>：默认情况下，只有出现<b><code>RuntimeException</code></b>才会回滚异常，<code>rollbackFor</code>属性用于控制出现何种异常类型，回滚事务</li>
+<li><b><code>noRollbackFor</code>不回滚</b>：指定哪些异常不会回滚, 默认没有指定,如果指定,应该在rollbackFor的范围内!<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240817205844.png" alt="" /></li>
+</ul>
+<blockquote>
+<p>如果<code>rollbackFor</code>和<code>noRollbackFor</code>同时指定同一类型，Spring的行为会出现冲突和不确定性</p>
+</blockquote>
+<ul>
+<li><b><code>timeout</code>超时时间</b>：当事务运行时间超过了指定的时间限制，事务将被强制回滚，并抛出一个 <strong>TransactionTimedOutException</strong> 异常。默认值为-1，表示永不超时<br />
+<img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240822140059.png" alt="" /></li>
 <li><b><code>propagation</code>传播行为</b>：指的是当一个事务方法被另一个事务方法调用时，这个事务方法应该如何进行事务控制<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240817210241.png" alt="" /></li>
-</ul>
-</li>
 </ul>
 <table>
 <thead>
@@ -3005,16 +3115,39 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 </tr>
 </tbody>
 </table>
-<ul>
+<blockquote>
+<ol>
 <li><code>REQUIRED</code>：大部分情况下都是用该传播行为即可。</li>
 <li><code>REQUIRES_NEW</code>：当我们不希望事务之间相互影响时，可以使用该传播行为。比如：下订单前需要记录日志，不论订单保存成功与否，都需要保证日志记录能够记录成功。</li>
+</ol>
+</blockquote>
+<ul>
+<li><b><code>isolation</code>隔离级别</b>：设置事务的隔离级别,mysql默认是repeatable read!</li>
 </ul>
+</li>
+</ul>
+<ol>
+<li><strong>读未提交（Read Uncommitted）</strong>：事务可以读取未被提交的数据，容易产生脏读、不可重复读和幻读等问题。实现简单但不太安全，一般不用。</li>
+<li><strong>读已提交（Read Committed）</strong>：事务只能读取已经提交的数据，可以避免脏读问题，但可能引发不可重复读和幻读。</li>
+<li><strong>可重复读（Repeatable Read）</strong>：在一个事务中，相同的查询将返回相同的结果集，不管其他事务对数据做了什么修改。可以避免脏读和不可重复读，但仍有幻读的问题。</li>
+<li><strong>串行化（Serializable）</strong>：最高的隔离级别，完全禁止了并发，只允许一个事务执行完毕之后才能执行另一个事务。可以避免以上所有问题，但效率较低，不适用于高并发场景。<br />
+<img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240822141436.png" alt="" /></li>
+</ol>
 <blockquote>
 <p><strong>开启spring事务管理日志</strong>：<br />
 在配置文件中添加</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">logging</span><span class="token punctuation">:</span>
   <span class="token key atrule">level</span><span class="token punctuation">:</span>
     <span class="token key atrule">org.springframework.jdbc.support.JdbcTransactionManager</span><span class="token punctuation">:</span> debug<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><strong>注意事项</strong>：<br />
+如果在非SpringBoot框架中想使用事务功能，需要在配置类添加<b><code>@EnableTransactionManagement</code></b>注解，并在pom.xml中添加引入spring-tx依赖。<br />
+<b><code>@EnableTransactionManagement</code></b> 是Spring中的一个注解，用于启用Spring的注解驱动的事务管理功能。它通常与 <strong>@Configuration</strong> 注解一起使用，配置类中声明它表示希望在应用程序中使用基于注解的事务管理。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- 声明式事务依赖--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-tx<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>6.0.6<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </blockquote>
 <h2 id="11aop"><a class="markdownIt-Anchor" href="#11aop"></a> 11.AOP</h2>
 <h3 id="111-概述"><a class="markdownIt-Anchor" href="#111-概述"></a> 11.1 概述</h3>
@@ -3044,26 +3177,29 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 <h3 id="112-快速入门"><a class="markdownIt-Anchor" href="#112-快速入门"></a> 11.2 快速入门</h3>
 <p>统计各个业务层方法执行耗时</p>
 <ul>
-<li><strong>导入依赖</strong>：在pom.xml中添加AOP依赖<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-aop<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
-- **编写AOP依赖**：针对特定的方法根据业务需要进行编程
-  ```java
-  @Component
-  @Aspect
-  public class TimeAspect &#123;
-    @Around("execution(* com.lusy.service.impl.*.*(..))")
-    public Object recordTime(ProceedingJoinPoint pjp) throws Throwable &#123;
-      long start = System.currentTimeMillis();
-      Object result = pjp.proceed(); // 调用原始方法运行
-      long end = System.currentTimeMillis();
-      log.info(pjp.getSignature() + "方法执行耗时：&#123;&#125;ms" + (end - start));
-      return result;
-    &#125;
-  &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<li><strong>导入依赖</strong>：在pom.xml中添加AOP依赖<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-aop<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><strong>编写AOP依赖</strong>：针对特定的方法根据业务需要进行编程<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Aspect</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TimeAspect</span> <span class="token punctuation">&#123;</span>
+  <span class="token annotation punctuation">@Around</span><span class="token punctuation">(</span><span class="token string">"execution(* com.lusy.service.impl.*.*(..))"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">recordTime</span><span class="token punctuation">(</span><span class="token class-name">ProceedingJoinPoint</span> pjp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">long</span> start <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Object</span> result <span class="token operator">=</span> pjp<span class="token punctuation">.</span><span class="token function">proceed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用原始方法运行</span>
+    <span class="token keyword">long</span> end <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span>pjp<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"方法执行耗时：&#123;&#125;ms"</span> <span class="token operator">+</span> <span class="token punctuation">(</span>end <span class="token operator">-</span> start<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 </ul>
+<blockquote>
+<p><strong>注意事项</strong>：<br />
+如果不是在springboot框架中使用AOP，还需要在配置类中添加&lt;&gt;<code>@EnableAspectJAutoProxy</code>&lt;/  b&gt;注解开启AOP功能</p>
+</blockquote>
 <h3 id="113-aop核心概念"><a class="markdownIt-Anchor" href="#113-aop核心概念"></a> 11.3 AOP核心概念</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240817220556.png" alt="" /></p>
 <h3 id="114-通知类型"><a class="markdownIt-Anchor" href="#114-通知类型"></a> 11.4 通知类型</h3>
@@ -3079,7 +3215,34 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 <ul>
 <li><b><code>@Around</code></b>环绕通知需要自己调用 <code>ProceedingJoinPoint.proceed()</code>方法来让原始方法执行，其它通知则不需要考虑目标方法执行</li>
 <li><b><code>@Around</code></b>环绕通知的返回值，必须指定为Object类型，来接收原始方法的返回值</li>
+<li><b><code>@AfterReturning</code></b>和<b><code>@AfterThrowing</code></b>通知，如果需要指定返回值来接收原始方法的返回值或异常对象，可以通过各自的属性值<b><code>returning</code></b>和<b><code>throwing</code></b>来指定接收返回值或异常对象的变量名。</li>
 </ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// @AfterReturning注解标记返回通知方法</span>
+<span class="token comment">// 在返回通知中获取目标方法返回值分两步：</span>
+<span class="token comment">// 第一步：在@AfterReturning注解中通过returning属性设置一个名称</span>
+<span class="token comment">// 第二步：使用returning属性设置的名称在通知方法中声明一个对应的形参</span>
+<span class="token annotation punctuation">@AfterReturning</span><span class="token punctuation">(</span>
+       value <span class="token operator">=</span> <span class="token string">"execution(public int com.atguigu.aop.api.Calculator.add(int,int))"</span><span class="token punctuation">,</span>
+       returning <span class="token operator">=</span> <span class="token string">"targetMethodReturnValue"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">printLogAfterCoreSuccess</span><span class="token punctuation">(</span><span class="token class-name">JoinPoint</span> joinPoint<span class="token punctuation">,</span> <span class="token class-name">Object</span> targetMethodReturnValue<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   
+   <span class="token class-name">String</span> methodName <span class="token operator">=</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   
+   <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"[AOP返回通知] "</span><span class="token operator">+</span>methodName<span class="token operator">+</span><span class="token string">"方法成功结束了，返回值是："</span> <span class="token operator">+</span> targetMethodReturnValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">// @AfterThrowing注解标记异常通知方法</span>
+<span class="token comment">// 在异常通知中获取目标方法抛出的异常分两步：</span>
+<span class="token comment">// 第一步：在@AfterThrowing注解中声明一个throwing属性设定形参名称</span>
+<span class="token comment">// 第二步：使用throwing属性指定的名称在通知方法声明形参，Spring会将目标方法抛出的异常对象从这里传给我们</span>
+<span class="token annotation punctuation">@AfterThrowing</span><span class="token punctuation">(</span>
+        value <span class="token operator">=</span> <span class="token string">"execution(public int com.atguigu.aop.api.Calculator.add(int,int))"</span><span class="token punctuation">,</span>
+        throwing <span class="token operator">=</span> <span class="token string">"targetMethodException"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">printLogAfterCoreException</span><span class="token punctuation">(</span><span class="token class-name">JoinPoint</span> joinPoint<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> targetMethodException<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    
+    <span class="token class-name">String</span> methodName <span class="token operator">=</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"[AOP异常通知] "</span><span class="token operator">+</span>methodName<span class="token operator">+</span><span class="token string">"方法抛异常了，异常类型是："</span> <span class="token operator">+</span> targetMethodException<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>getName <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </blockquote>
 <h3 id="115-pointcut注解"><a class="markdownIt-Anchor" href="#115-pointcut注解"></a> 11.5 @Pointcut注解</h3>
 <p>该注解的作用是将公共的切点表达式抽取出来，需要用到时引用该切点表达式即可。<br />
@@ -3122,9 +3285,13 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 </ul>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> com<span class="token punctuation">.</span>*<span class="token punctuation">.</span>service<span class="token punctuation">.</span>impl<span class="token punctuation">.</span>*<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
-<li><b><code>..</code></b>：多个独立的任意符号，可以通配任意层级的包，或任意类型、任意个数的参数</li>
+<li><b><code>..</code></b>：多个独立的任意符号，可以通配任意层级的包，或任意类型、任意个数的参数,在通配包时，不能作为开头。如果要指定全部包，可以用<b><code>*..</code></b></li>
 </ul>
-<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> com<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span><span class="token punctuation">.</span>DeptService<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> com<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span><span class="token punctuation">.</span>DeptService<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> com<span class="token punctuation">.</span>example<span class="token punctuation">.</span>service<span class="token punctuation">.</span><span class="token punctuation">.</span>*<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> <span class="token punctuation">.</span><span class="token punctuation">.</span>example<span class="token punctuation">.</span>service<span class="token punctuation">.</span><span class="token punctuation">.</span>*<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 错误的</span>
+<span class="token comment">// 查询全部包下，无参数的方法</span>
+<span class="token function">execution</span><span class="token punctuation">(</span><span class="token operator">*</span> <span class="token operator">*</span><span class="token punctuation">.</span><span class="token punctuation">.</span>*<span class="token punctuation">.</span>*<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">//第三个 *：匹配类名中的最后一级，防止出现连续的 ...</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 </ul>
 <blockquote>
@@ -3250,7 +3417,13 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 <ul>
 <li><strong>@Bean</strong>修饰的方法将当前方法的返回值对象交给IOC容器管理，成为IOC容器的Bean</li>
 <li>通过<b>@Bean</b>注解的name或value属性可以声明Bean的名称，如果不指定，默认Bean的名称就是方法名。</li>
-<li>如果第三方Bean需要依赖其它Bean对象，直接在@Bean定义的方法中设置形参即可，容器会根据类型自动装配。</li>
+<li>周期方法指定：
+<ul>
+<li>原有注解方案：@PostConstruct、@PreDestroy 注解指定</li>
+<li>bean属性指定：initMethod、destroyMethod 指定</li>
+</ul>
+</li>
+<li>如果第三方Bean需要依赖其它Bean对象，直接在@Bean定义的方法中设置形参即可，容器会根据类型自动装配。如果有多个类型匹配，可以使用形参名等同于对应的Beanid标识即可。</li>
 </ul>
 </blockquote>
 <blockquote>
@@ -3881,7 +4054,7 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">106.6k</span>
+                        class="white-color">108.5k</span>
             
             
             
