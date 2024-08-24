@@ -419,21 +419,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-08-23
+                    2024-08-24
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    23.3k
+                    27.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    92 分
+                    109 分
                 </div>
                 
 
@@ -1690,7 +1690,7 @@ Maven中有3套<font color="red">相互独立</font>的生命周期：</p>
 <h2 id="3http"><a class="markdownIt-Anchor" href="#3http"></a> 3.HTTP</h2>
 <h3 id="31-概念"><a class="markdownIt-Anchor" href="#31-概念"></a> 3.1 概念</h3>
 <p>HTTP（Hypertext Transfer Protocol，超文本传输协议）是一种用于传输超文本信息的协议。规定了浏览器和服务器之间数据传输的规则。</p>
-<h3 id="32特定点"><a class="markdownIt-Anchor" href="#32特定点"></a> 3.2特定点：</h3>
+<h3 id="32特点"><a class="markdownIt-Anchor" href="#32特点"></a> 3.2特点</h3>
 <ul>
 <li><strong>基于TCP协议</strong>：面向连接，安全。</li>
 <li><strong>基于请求-响应模型</strong>：一次请求对应一次响应。</li>
@@ -1779,6 +1779,24 @@ Maven中有3套<font color="red">相互独立</font>的生命周期：</p>
 </tr>
 </tbody>
 </table>
+<h3 id="34-接收请求头数据"><a class="markdownIt-Anchor" href="#34-接收请求头数据"></a> 3.4 接收请求头数据</h3>
+<p>可以使用<b><code>@RequestHeader</code></b>注解将请求标头绑定到控制器中的方法参数。</p>
+<p>请考虑以下带有标头的请求：</p>
+<pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">Host                    localhost:8080
+Accept                  text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9
+Accept-Language         fr,en-gb;q&#x3D;0.7,en;q&#x3D;0.3
+Accept-Encoding         gzip,deflate
+Accept-Charset          ISO-8859-1,utf-8;q&#x3D;0.7,*;q&#x3D;0.7
+Keep-Alive              300<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>下面的示例获取 <code>Accept-Encoding</code> 和 <code>Keep-Alive</code> 标头的值：</p>
+<pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">@GetMapping(&quot;&#x2F;demo&quot;)
+public void handle(
+  &#x2F;&#x2F; encoding: gzip,deflate
+  &#x2F;&#x2F; keepAlive: 300
+    @RequestHeader(&quot;Accept-Encoding&quot;) String encoding, 
+    @RequestHeader(&quot;Keep-Alive&quot;) long keepAlive) &#123; 
+  &#x2F;&#x2F;...
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="4tomcat"><a class="markdownIt-Anchor" href="#4tomcat"></a> 4.Tomcat</h2>
 <h3 id="41-概念"><a class="markdownIt-Anchor" href="#41-概念"></a> 4.1 概念</h3>
 <ul>
@@ -1830,16 +1848,17 @@ Maven中有3套<font color="red">相互独立</font>的生命周期：</p>
 </li>
 <li><strong>SpringBoot方式</strong>
 <ul>
-<li><font color="red"><strong>参数名与形参变量名相同</strong></font>，定义形参即可接收参数,且会自动进行类型转换。<br />
+<li><font color="red"><strong>参数名与形参变量名相同</strong></font>，定义形参即可接收参数,且会自动进行类型转换。【可以不传递，不会报错】<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240811183255.png" alt="" /></li>
-<li>如果方法形参名称与请求参数名称不匹配，可以使用<code>@RequestParam</code>注解，指定请求参数的名称。<br />
+<li>如果方法形参名称与请求参数名称不匹配，可以使用<code>@RequestParam</code>注解，指定请求参数的名称。【默认情况下必须传递，否则会报错】<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240811183613.png" alt="" /></li>
 </ul>
 </li>
 </ul>
 <blockquote>
 <p><strong>注意事项</strong>：<br />
-<code>@RequestParam</code>中的<code>required</code>属性默认值为true，代表该请求参数必须传递，如果不传递将会报错。如果该参数是可选的，可以将<code>required</code>属性设置为false。</p>
+<code>@RequestParam</code>中的<code>required</code>属性默认值为true，代表该请求参数必须传递，如果不传递将会报错。如果该参数是可选的，可以将<code>required</code>属性设置为false。<br />
+<code>@RequestParam</code>中有三个属性：<code>name</code>、<code>required</code>、<code>defaultValue</code>，分别代表请求参数的名称、是否必须传递、默认值。</p>
 </blockquote>
 <h4 id="512-实体参数"><a class="markdownIt-Anchor" href="#512-实体参数"></a> 5.1.2 实体参数</h4>
 <ul>
@@ -1850,6 +1869,10 @@ Maven中有3套<font color="red">相互独立</font>的生命周期：</p>
 请求参数名与形参对象属性名相同，按照对象层次结构关系即可接收嵌套POJO属性参数。<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240811184552.png" alt="" /></li>
 </ul>
+<blockquote>
+<p><strong>注意事项</strong>：<br />
+可以在实体类中直接给定默认值，如果请求参数没有传递，则使用默认值。</p>
+</blockquote>
 <h4 id="513-数组集合参数"><a class="markdownIt-Anchor" href="#513-数组集合参数"></a> 5.1.3 数组集合参数</h4>
 <ul>
 <li><strong>数组参数</strong>：<br />
@@ -1893,6 +1916,9 @@ JSON数据<strong>键名</strong>与形参对象<strong>属性名</strong>相同
 <li>说明：<strong><code>@RestController</code></strong> == <strong><code>@Controller</code></strong>+<strong><code>@ResponseBody</code></strong></li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240811204403.png" alt="" /></p>
+<blockquote>
+<p>如果不添加<code>@ResponseBody</code>注解，Spring会认为返回值是一个视图名称。</p>
+</blockquote>
 <h4 id="522-统一响应结果"><a class="markdownIt-Anchor" href="#522-统一响应结果"></a> 5.2.2 统一响应结果</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240811204521.png" alt="" /></p>
 <h2 id="6分层解耦"><a class="markdownIt-Anchor" href="#6分层解耦"></a> 6.分层解耦</h2>
@@ -2174,10 +2200,13 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 </ul>
 <p>解决方式：</p>
 <ul>
-<li><strong>起别名</strong>：在SQL语句中，对不一样的列名器别名，别名和实体类中的属性名一致。(<code>as</code>可以省略)<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select id, username, gender, email, dept_id as deptId from emp where id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+<li>
+<p><strong>起别名</strong>：在SQL语句中，对不一样的列名器别名，别名和实体类中的属性名一致。(<code>as</code>可以省略)</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select id, username, gender, email, dept_id as deptId from emp where id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
 <span class="token keyword">public</span> <span class="token class-name">Emp</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
-<li><strong>手动结果映射</strong>：
+<li>
+<p><strong>手动结果映射</strong>：</p>
 <ul>
 <li>通过<b><code>@Results</code></b>和<b><code>@Result</code></b>注解，手动映射。</li>
 </ul>
@@ -2209,8 +2238,10 @@ Java DataBase Connectivity，就是使用Java语言操作关系型数据库的�
 select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
-<li><strong>开启驼峰命名</strong>：如果字段名与属性名符合驼峰命名法则，mybatis会自动通过驼峰命名规则映射。<br />
-主要用于单层级的字段映射。它不能自动处理更复杂的场景，例如多层级的嵌套对象或深层次的属性名转换。<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># 在application.yml中，开启驼峰命名自动映射开关。即从数据库字段名a_column映射到实体类属性名aCloumn。</span>
+<li>
+<p><strong>开启驼峰命名</strong>：如果字段名与属性名符合驼峰命名法则，mybatis会自动通过驼峰命名规则映射。<br />
+主要用于单层级的字段映射。它不能自动处理更复杂的场景，例如多层级的嵌套对象或深层次的属性名转换。</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># 在application.yml中，开启驼峰命名自动映射开关。即从数据库字段名a_column映射到实体类属性名aCloumn。</span>
 <span class="token key atrule">mybatis</span><span class="token punctuation">:</span>
 <span class="token key atrule">configuration</span><span class="token punctuation">:</span>
   <span class="token comment"># 配置mybatis的日志, 指定输出到控制台</span>
@@ -2218,7 +2249,359 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
   <span class="token comment"># 开启mybatis的驼峰命名自动映射开关 a_column ------> aCloumn</span>
   <span class="token key atrule">map-underscore-to-camel-case</span><span class="token punctuation">:</span> <span class="token boolean important">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
+<li>
+<p><strong>开启自动映射</strong>：<code>autoMappingBehavior</code> 是 MyBatis 中的一个全局配置项，用于控制 MyBatis 如何自动映射查询结果中的列到 Java 实体类的属性上。根据配置的不同，<code>autoMappingBehavior</code> 可以影响映射的自动化程度，从而减少或增加手动配置的需求。它有以下三个配置选项：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">mybatis</span><span class="token punctuation">:</span>
+  <span class="token key atrule">configuration</span><span class="token punctuation">:</span>
+    <span class="token comment"># 配置MyBatis的日志, 指定输出到控制台</span>
+    <span class="token key atrule">log-impl</span><span class="token punctuation">:</span> org.apache.ibatis.logging.stdout.StdOutImpl
+    <span class="token comment"># 设置MyBatis的自动映射行为</span>
+    <span class="token key atrule">auto-mapping-behavior</span><span class="token punctuation">:</span> NONE <span class="token comment"># 可选值：NONE, PARTIAL, FULL</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong><code>NONE</code></strong>：MyBatis 不会自动映射任何列到实体类属性。所有的映射关系必须手动配置，通常通过 <code>@Result</code> 注解或 <code>&lt;resultMap&gt;</code> 标签来指定。这种模式适合需要对映射关系进行严格控制的场景，以避免意外的映射错误。</li>
+<li><strong><code>PARTIAL</code></strong>（默认值）：MyBatis 会自动映射查询结果中的列到实体类属性，但只限于那些没有在 <code>ResultMap</code> 中明确定义过的列。如果在 <code>ResultMap</code> 中已经定义了某列的映射关系，则 MyBatis 不会再次自动映射该列。<code>PARTIAL</code> 是大多数情况下的推荐设置，能够在保持映射控制的同时，自动处理简单的映射任务。</li>
+<li><strong><code>FULL</code></strong>：MyBatis 会尝试自动映射所有查询结果中的列到实体类属性，无论这些列是否在 <code>ResultMap</code> 中定义。<code>FULL</code> 设置适合简单对象的映射，能够减少手动配置的工作量。但在复杂映射场景中，可能导致意外的映射错误，因此需要谨慎使用。</li>
+<li><strong>应用场景与注意事项</strong>：<code>autoMappingBehavior</code> 的设置直接影响 MyBatis 的自动映射能力。设置为 <code>FULL</code> 时，MyBatis 可以帮助自动处理简单的<strong>嵌套对象映射</strong>，但对于复杂的嵌套结构，手动映射依然是必不可少的。即使设置为 <code>FULL</code> 或 <code>PARTIAL</code>，在复杂或关键场景下，建议依然手动配置映射，以确保映射的准确性和可控性。此外，在处理大数据量或复杂对象映射时，<code>FULL</code> 的自动映射可能增加系统负担，因此在性能敏感的应用中应谨慎选择。</li>
 </ul>
+</li>
+</ul>
+<h4 id="8410-多表映射"><a class="markdownIt-Anchor" href="#8410-多表映射"></a> 8.4.10 多表映射</h4>
+<ul>
+<li>
+<p><strong>一对一映射</strong>：<br />
+在一对一关联中，一个实体对象包含另一个实体对象，通常通过外键关系实现。使用 <strong><code>@One</code></strong> 注解、**<code>@Result</code><strong>注解、</strong><code>&lt;association&gt;</code>**标签均可以帮助 MyBatis 自动处理这种关系的查询和映射。</p>
+<p><strong>示例</strong>：<br />
+假设我们有两个表：<code>user</code> 和 <code>address</code>，它们之间存在一对一关系。</p>
+<ul>
+<li>
+<p><code>user</code> 表：</p>
+<ul>
+<li><code>id</code>（用户ID）</li>
+<li><code>name</code>（用户名）</li>
+<li><code>address_id</code>（外键，指向 <code>address</code> 表的 ID）</li>
+</ul>
+</li>
+<li>
+<p><code>address</code> 表：</p>
+<ul>
+<li><code>id</code>（地址ID）</li>
+<li><code>street</code>（街道）</li>
+<li><code>city</code>（城市）</li>
+</ul>
+</li>
+</ul>
+<p><strong>实体类</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Address</span> address<span class="token punctuation">;</span> <span class="token comment">// 一对一关系</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Address</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> street<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> city<span class="token punctuation">;</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+<ol>
+<li>
+<p><strong>注解方式 (<code>@One</code> 注解)</strong><br />
+在 <code>UserMapper</code> 中，使用 <code>@One</code> 注解来配置一对一关联。在这种方式中，<code>@One</code> 注解用于指定如何从主查询的结果集中加载一个单一的关联对象。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT u.id, u.name, a.id AS address_id, a.street, a.city "</span> <span class="token operator">+</span>
+             <span class="token string">"FROM user u "</span> <span class="token operator">+</span>
+             <span class="token string">"LEFT JOIN address a ON u.address_id = a.id "</span> <span class="token operator">+</span>
+             <span class="token string">"WHERE u.id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"address_id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"address"</span><span class="token punctuation">,</span>
+                one <span class="token operator">=</span> <span class="token annotation punctuation">@One</span><span class="token punctuation">(</span>select <span class="token operator">=</span> <span class="token string">"com.example.mapper.AddressMapper.findById"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token class-name">User</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>@Result(column = &quot;address_id&quot;, property = &quot;address&quot;, one = @One(select = &quot;com.example.mapper.AddressMapper.findById&quot;))</code>：
+<ul>
+<li><code>column</code>：数据库字段名。</li>
+<li><code>property</code>：实体类中的属性名。</li>
+<li><code>one</code>：指定一个方法来查询 <code>Address</code> 对象，<code>select</code> 属性指向了 <code>AddressMapper</code> 中的方法 <code>findById</code>。</li>
+</ul>
+</li>
+</ul>
+ <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">AddressMapper</span> <span class="token punctuation">&#123;</span>
+   
+   <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT id, street, city FROM address WHERE id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+   <span class="token class-name">Address</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li>
+<p><strong>注解方式 (<code>@Result</code> 注解)</strong><br />
+在 <code>UserMapper</code> 中，使用 <code>@Result</code> 注解来直接映射数据库字段到实体类的属性。如果关联对象的属性在主查询中被直接包含，则可以通过 <code>@Result</code> 注解来映射。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT u.id, u.name, a.id AS address_id, a.street, a.city "</span> <span class="token operator">+</span>
+            <span class="token string">"FROM user u "</span> <span class="token operator">+</span>
+            <span class="token string">"LEFT JOIN address a ON u.address_id = a.id "</span> <span class="token operator">+</span>
+            <span class="token string">"WHERE u.id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"address_id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"address.id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// 自动映射到 Address 对象</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"street"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"address.street"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"city"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"address.city"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token class-name">User</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>@Result(column = &quot;address_id&quot;, property = &quot;address.id&quot;)</code>：自动将 <code>address_id</code> 映射到 <code>Address</code> 对象的 <code>id</code> 属性。</li>
+<li><code>@Result(column = &quot;street&quot;, property = &quot;address.street&quot;)</code>：将 <code>street</code> 映射到 <code>Address</code> 对象的 <code>street</code> 属性。</li>
+</ul>
+</li>
+<li>
+<p><strong>XML 配置方式 (<code>&lt;association&gt;</code> 标签)</strong><br />
+在 <code>UserMapper.xml</code> 中，通过 <code>&lt;association&gt;</code> 标签指定如何查询和映射关联对象。</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>findById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.User<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    SELECT u.id, u.name, a.id AS address_id, a.street, a.city
+    FROM user u
+    LEFT JOIN address a ON u.address_id = a.id
+    WHERE u.id = #&#123;id&#125;
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>association</span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>address<span class="token punctuation">"</span></span> <span class="token attr-name">javaType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.Address<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>address_id<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>street<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>street<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>city<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>city<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>association</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong><code>&lt;association&gt;</code> 标签</strong>：用于指定如何加载和映射关联对象。
+<ul>
+<li><code>property</code>：在主对象中用来表示关联对象的属性名。</li>
+<li><code>javaType</code>：被关联的实体类的全类名。</li>
+<li><code>&lt;id&gt;</code>：映射主键字段。</li>
+<li><code>&lt;result&gt;</code>：映射其他字段。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong><code>@One</code> 注解</strong>：用于在注解方式中配置一对一关系，通过指定 <code>select</code> 属性来查询关联对象。</li>
+<li><strong><code>@Result</code> 注解</strong>：直接映射查询结果到实体对象的属性，包括嵌套对象的属性。</li>
+<li><strong><code>&lt;association&gt;</code> 标签</strong>：在 XML 配置中定义一对一关系，通过指定 <code>property</code> 和 <code>javaType</code> 来配置如何映射关联对象。</li>
+</ul>
+</blockquote>
+<ul>
+<li>
+<p><strong>一对多映射</strong>：<br />
+假设我们有两个表：<code>user</code> 和 <code>orders</code>，其中一个用户 (<code>user</code>) 可以有多个订单 (<code>orders</code>)。我们将展示如何在 <code>User</code> 对象中使用 <code>@Many</code> 注解以及在 XML 配置中使用 <code>&lt;collection&gt;</code> 标签来处理一对多关系。</p>
+<p><strong>实体类</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Order</span><span class="token punctuation">></span></span> orders<span class="token punctuation">;</span> <span class="token comment">// 一对多关系</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Order</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> product<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> userId<span class="token punctuation">;</span> <span class="token comment">// 外键</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+<ol>
+<li>
+<p><strong>使用 <code>@Many</code> 注解</strong><br />
+在这种方式中，我们在 <code>UserMapper</code> 接口中使用 <code>@Many</code> 注解来定义一对多关系。<br />
+<strong>Mapper 接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT u.id, u.name, o.id AS order_id, o.product "</span> <span class="token operator">+</span>
+            <span class="token string">"FROM user u "</span> <span class="token operator">+</span>
+            <span class="token string">"LEFT JOIN orders o ON u.id = o.user_id "</span> <span class="token operator">+</span>
+            <span class="token string">"WHERE u.id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"orders"</span><span class="token punctuation">,</span> 
+                many <span class="token operator">=</span> <span class="token annotation punctuation">@Many</span><span class="token punctuation">(</span>select <span class="token operator">=</span> <span class="token string">"com.example.mapper.OrderMapper.findByUserId"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token class-name">User</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>OrderMapper 接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">OrderMapper</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT id, product, user_id FROM orders WHERE user_id = #&#123;userId&#125;"</span><span class="token punctuation">)</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Order</span><span class="token punctuation">></span></span> <span class="token function">findByUserId</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong><code>@Many</code> 注解</strong>：在 <code>UserMapper</code> 中，<code>@Result</code> 注解的 <code>many</code> 属性指定了如何加载 <code>orders</code> 属性。<code>select</code> 属性指向 <code>OrderMapper</code> 中的 <code>findByUserId</code> 方法，该方法返回<br />
+与  <code>userId</code> 相关的所有订单。</li>
+</ul>
+</li>
+<li>
+<p><strong>使用 XML 配置中的 <code>&lt;collection&gt;</code> 标签</strong><br />
+在这种方式中，我们使用 XML 配置文件来定义一对多关系。</p>
+<p><strong>UserMapper.xml</strong></p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">namespace</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.mapper.UserMapper<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>findById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.User<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        SELECT u.id, u.name, o.id AS order_id, o.product
+        FROM user u
+        LEFT JOIN orders o ON u.id = o.user_id
+        WHERE u.id = #&#123;id&#125;
+        <span class="token comment">&lt;!-- 使用 `&lt;collection>` 标签定义一对多关系 --></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>collection</span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>orders<span class="token punctuation">"</span></span> <span class="token attr-name">ofType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.Order<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>order_id<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>product<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>product<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>collection</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong><code>&lt;collection&gt;</code> 标签</strong>：用于定义 <code>User</code> 对象中的 <code>orders</code> 集合属性。<code>property</code> 属性指定集合属性的名称，<code>ofType</code> 属性指定集合中元素的类型。在查询结果中，MyBatis 会自动 将结果集中的多个订单映射到 <code>User</code> 对象的 <code>orders</code> 属性中。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong><code>@Many</code> 注解</strong>：在 <code>UserMapper</code> 中通过 <code>@Many</code> 注解指定如何查询与 <code>User</code> 相关的多个 <code>Order</code> 对象。这种方式简洁明了，并且适用于注解方式的配置。</li>
+<li><strong>XML 配置中的 <code>&lt;collection&gt;</code> 标签</strong>：在 <code>UserMapper.xml</code> 中使用 <code>&lt;collection&gt;</code> 标签来定义一对多关系。通过这种方式，你可以在 XML 文件中清晰地配置如何将多个结果映射到 <code>User</code> 对象的集合属性中。这种方式适用于 XML 配置文件，并允许你在查询中定义更复杂的映射逻辑。</li>
+</ul>
+</blockquote>
+<ul>
+<li>
+<p><strong>三表查询</strong>：<br />
+在 MyBatis 中处理三表关联时，通常涉及到多对多或更复杂的多级关联关系。我们可以通过多对一和一对多的组合来实现三表关联。下面我将展示一个处理三表关联的完整示例，包括使用注解和 XML 配置两种方式。</p>
+<p><strong>示例</strong><br />
+假设我们有以下三张表：</p>
+</li>
+<li>
+<p><strong><code>user</code> 表</strong>：存储用户信息。</p>
+<ul>
+<li><code>id</code>（用户ID）</li>
+<li><code>name</code>（用户名）</li>
+</ul>
+</li>
+<li>
+<p><strong><code>orders</code> 表</strong>：存储订单信息，关联到 <code>user</code> 表。</p>
+<ul>
+<li><code>id</code>（订单ID）</li>
+<li><code>product</code>（产品名）</li>
+<li><code>user_id</code>（外键，指向 <code>user</code> 表的 ID）</li>
+</ul>
+</li>
+<li>
+<p><strong><code>order_items</code> 表</strong>：存储订单项信息，关联到 <code>orders</code> 表。</p>
+<ul>
+<li><code>id</code>（订单项ID）</li>
+<li><code>order_id</code>（外键，指向 <code>orders</code> 表的 ID）</li>
+<li><code>item_name</code>（订单项名）</li>
+</ul>
+<p><strong>实体类</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Order</span><span class="token punctuation">></span></span> orders<span class="token punctuation">;</span> <span class="token comment">// 一对多关系：用户 -> 订单</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Order</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> product<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">OrderItem</span><span class="token punctuation">></span></span> orderItems<span class="token punctuation">;</span> <span class="token comment">// 一对多关系：订单 -> 订单项</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OrderItem</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> id<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> itemName<span class="token punctuation">;</span>
+    <span class="token comment">// Getters and setters</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>目标</strong><br />
+我们要查询 <code>User</code> 对象，并且包含用户的订单 (<code>Order</code>)，以及每个订单下的订单项 (<code>OrderItem</code>)。</p>
+</li>
+</ul>
+<ol>
+<li>
+<p><strong>使用注解的方式</strong>：<br />
+<strong>UserMapper 接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT u.id, u.name, o.id AS order_id, o.product "</span> <span class="token operator">+</span>
+            <span class="token string">"FROM user u "</span> <span class="token operator">+</span>
+            <span class="token string">"LEFT JOIN orders o ON u.id = o.user_id "</span> <span class="token operator">+</span>
+            <span class="token string">"WHERE u.id = #&#123;id&#125;"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"order_id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"orders"</span><span class="token punctuation">,</span> 
+                many <span class="token operator">=</span> <span class="token annotation punctuation">@Many</span><span class="token punctuation">(</span>select <span class="token operator">=</span> <span class="token string">"com.example.mapper.OrderMapper.findByUserId"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token class-name">User</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>OrderMapper 接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">OrderMapper</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT id, product FROM orders WHERE user_id = #&#123;userId&#125;"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Results</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"product"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"product"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Result</span><span class="token punctuation">(</span>column <span class="token operator">=</span> <span class="token string">"id"</span><span class="token punctuation">,</span> property <span class="token operator">=</span> <span class="token string">"orderItems"</span><span class="token punctuation">,</span> 
+                many <span class="token operator">=</span> <span class="token annotation punctuation">@Many</span><span class="token punctuation">(</span>select <span class="token operator">=</span> <span class="token string">"com.example.mapper.OrderItemMapper.findByOrderId"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Order</span><span class="token punctuation">></span></span> <span class="token function">findByUserId</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>OrderItemMapper 接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">OrderItemMapper</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"SELECT id, item_name FROM order_items WHERE order_id = #&#123;orderId&#125;"</span><span class="token punctuation">)</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">OrderItem</span><span class="token punctuation">></span></span> <span class="token function">findByOrderId</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> orderId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在这个配置中：</p>
+<ul>
+<li><strong><code>UserMapper</code></strong>：负责查询 <code>User</code> 信息及其关联的 <code>Order</code> 列表。<code>@Many</code> 注解指向 <code>OrderMapper</code> 中的 <code>findByUserId</code> 方法，该方法进一步加载每个订单的详细信息。</li>
+<li><strong><code>OrderMapper</code></strong>：负责查询 <code>Order</code> 信息及其关联的 <code>OrderItem</code> 列表。<code>@Many</code> 注解指向 <code>OrderItemMapper</code> 中的 <code>findByOrderId</code> 方法。</li>
+<li><strong><code>OrderItemMapper</code></strong>：负责查询 <code>OrderItem</code> 列表。</li>
+</ul>
+</li>
+<li>
+<p><strong>使用 XML 配置的方式</strong>：<br />
+<strong>UserMapper.xml</strong></p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">namespace</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.mapper.UserMapper<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>findById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.User<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        SELECT u.id, u.name
+        FROM user u
+        WHERE u.id = #&#123;id&#125;
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>collection</span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>orders<span class="token punctuation">"</span></span> <span class="token attr-name">ofType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.Order<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            SELECT o.id AS order_id, o.product
+            FROM orders o
+            WHERE o.user_id = #&#123;id&#125;
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>collection</span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>orderItems<span class="token punctuation">"</span></span> <span class="token attr-name">ofType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.example.pojo.OrderItem<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+                SELECT oi.id AS item_id, oi.item_name
+                FROM order_items oi
+                WHERE oi.order_id = #&#123;order_id&#125;
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>collection</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>collection</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong><code>&lt;collection&gt;</code> 标签</strong>：用于定义一对多关系，首先映射 <code>User</code> 与 <code>Order</code> 之间的关系，然后在 <code>Order</code> 与 <code>OrderItem</code> 之间再次使用 <code>&lt;collection&gt;</code> 标签。</li>
+<li><strong>多级映射</strong>：在 <code>UserMapper.xml</code> 中，我们嵌套使用 <code>&lt;collection&gt;</code> 标签来处理多级关联。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>总结</strong></p>
+<ul>
+<li><strong>注解方式</strong>：<code>@Many</code> 注解在三表关联中非常有效，可以简化代码，特别是在分布式项目中，但在复杂查询中可能不如 XML 配置灵活。</li>
+<li><strong>XML 配置方式</strong>：<code>&lt;collection&gt;</code> 标签在处理复杂关联时更直观，尤其是当查询需要多级嵌套或复杂的结果映射时。</li>
+</ul>
+</blockquote>
 <h3 id="85-xml映射文件"><a class="markdownIt-Anchor" href="#85-xml映射文件"></a> 8.5 XML映射文件</h3>
 <ul>
 <li><strong>规范</strong>：
@@ -2284,19 +2667,34 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">deleteByIds</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">></span></span> ids<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 </li>
 <li>XML映射文件：<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>delete</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>deleteByIds<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
- delete from emp where id in
- <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>foreach</span> <span class="token attr-name">collection</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ids<span class="token punctuation">"</span></span> <span class="token attr-name">item</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(<span class="token punctuation">"</span></span> <span class="token attr-name">separator</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>,<span class="token punctuation">"</span></span> <span class="token attr-name">close</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-  #&#123;id&#125;
- <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>foreach</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>delete</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token comment">&lt;!-- 从 emp 表中删除满足条件的记录 --></span>
+    delete from emp where id in
+    <span class="token comment">&lt;!-- 
+        使用 &lt;foreach> 标签遍历传入的集合 ids
+        collection="ids" 表示传入的集合参数名称是 ids
+        item="id" 表示遍历集合中的每个元素，并将当前元素赋值给 id
+        open="(" 表示在遍历元素之前，SQL 语句中添加一个左括号 (
+        separator="," 表示在每个元素之间，用逗号 , 作为分隔符
+        close=")" 表示在遍历元素之后，SQL 语句中添加一个右括号 )
+        原SQL：delete from emp where id in (1,2,3,4,5)
+    --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>foreach</span> <span class="token attr-name">collection</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ids<span class="token punctuation">"</span></span> <span class="token attr-name">item</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(<span class="token punctuation">"</span></span> <span class="token attr-name">separator</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>,<span class="token punctuation">"</span></span> <span class="token attr-name">close</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token comment">&lt;!-- 
+            将当前遍历到的 id 以 #&#123;id&#125; 的形式插入到 SQL 语句中
+            #&#123;id&#125; 是 MyBatis 的占位符，用于安全地传递参数，防止 SQL 注入
+        --></span>
+        #&#123;id&#125;
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>foreach</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>delete</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li>属性：
 <ul>
 <li><code>collection</code>：集合属性名。</li>
 <li><code>item</code>：集合遍历出来的元素/项的名称。</li>
-<li><code>open</code>：遍历集合元素前的前缀。</li>
-<li><code>separator</code>：遍历集合元素间的分隔符。</li>
-<li><code>close</code>：遍历集合元素后的后缀。</li>
+<li><code>open</code>：遍历集合元素前的前缀。【在遍历元素之前需要往SQL语句中添加什么内容】</li>
+<li><code>separator</code>：遍历集合元素间的分隔符。【在遍历元素之间需要往SQL语句中添加什么内容】</li>
+<li><code>close</code>：遍历集合元素后的后缀。【在遍历元素之后需要往SQL语句中添加什么内容】</li>
 </ul>
 </li>
 </ul>
@@ -2306,6 +2704,63 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
 <li><strong>&lt;include&gt;</strong>：通过属性refid，指定包含的sql片段的id。<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240813191643.png" alt="" /></li>
 </ul>
+<h4 id="856-trim标签"><a class="markdownIt-Anchor" href="#856-trim标签"></a> 8.5.6 trim标签</h4>
+<p>使用trim标签控制条件部分两端是否包含某些字符</p>
+<ul>
+<li>prefix属性：指定要动态添加的前缀</li>
+<li>suffix属性：指定要动态添加的后缀</li>
+<li>prefixOverrides属性：指定要动态去掉的前缀，使用&quot;|&quot;分隔有可能的多个值</li>
+<li>suffixOverrides属性：指定要动态去掉的后缀，使用&quot;|&quot;分隔有可能的多个值</li>
+</ul>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- List&lt;Employee> selectEmployeeByConditionByTrim(Employee employee) --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectEmployeeByConditionByTrim<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.atguigu.mybatis.entity.Employee<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    select emp_id,emp_name,emp_age,emp_salary,emp_gender
+    from t_emp
+    
+    <span class="token comment">&lt;!-- prefix属性指定要动态添加的前缀 --></span>
+    <span class="token comment">&lt;!-- suffix属性指定要动态添加的后缀 --></span>
+    <span class="token comment">&lt;!-- prefixOverrides属性指定要动态去掉的前缀，使用“|”分隔有可能的多个值 --></span>
+    <span class="token comment">&lt;!-- suffixOverrides属性指定要动态去掉的后缀，使用“|”分隔有可能的多个值 --></span>
+    <span class="token comment">&lt;!-- 当前例子用where标签实现更简洁，但是trim标签更灵活，可以用在任何有需要的地方 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>trim</span> <span class="token attr-name">prefix</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>where<span class="token punctuation">"</span></span> <span class="token attr-name">suffixOverrides</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>and|or<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empName != null<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            emp_name=#&#123;empName&#125; and
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empSalary <span class="token entity named-entity" title="&gt;">&amp;gt;</span> 3000<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            emp_salary>#&#123;empSalary&#125; and
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empAge <span class="token entity named-entity" title="&lt;">&amp;lt;</span>= 20<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            emp_age=#&#123;empAge&#125; or
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empGender=='male'<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            emp_gender=#&#123;empGender&#125;
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>trim</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="857-choosewhenotherwise标签"><a class="markdownIt-Anchor" href="#857-choosewhenotherwise标签"></a> 8.5.7 choose/when/otherwise标签</h4>
+<p>在多个分支条件中，仅执行一个。</p>
+<ul>
+<li>从上到下依次执行条件判断</li>
+<li>遇到的第一个满足条件的分支会被采纳</li>
+<li>被采纳分支后面的分支都将不被考虑</li>
+<li>如果所有的when分支都不满足，那么就执行otherwise分支</li>
+</ul>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- List&lt;Employee> selectEmployeeByConditionByChoose(Employee employee) --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectEmployeeByConditionByChoose<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.atguigu.mybatis.entity.Employee<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    select emp_id,emp_name,emp_salary from t_emp
+    where
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>choose</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>when</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empName != null<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>emp_name=#&#123;empName&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>when</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>when</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empSalary <span class="token entity named-entity" title="&lt;">&amp;lt;</span> 3000<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>emp_salary <span class="token entity named-entity" title="&lt;">&amp;lt;</span> 3000<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>when</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>otherwise</span><span class="token punctuation">></span></span>1=1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>otherwise</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>choose</span><span class="token punctuation">></span></span>
+    
+    <span class="token comment">&lt;!--
+     第一种情况：第一个when满足条件 where emp_name=?
+     第二种情况：第二个when满足条件 where emp_salary &lt; 3000
+     第三种情况：两个when都不满足 where 1=1 执行了otherwise
+     --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="9-项目搭建"><a class="markdownIt-Anchor" href="#9-项目搭建"></a> 9. 项目搭建</h2>
 <h3 id="91-环境搭建"><a class="markdownIt-Anchor" href="#91-环境搭建"></a> 9.1 环境搭建</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240814223026.png" alt="" /></p>
@@ -2322,6 +2777,7 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
 <ul>
 <li>类级别的<b><code>RequestMapping</code></b>定义了所有该类中处理方法的共同URL前缀。</li>
 <li>方法级别的<b><code>RequestMapping</code></b>则在类级别的URL基础上进一步细分，指定具体的处理路径（eg：GET、POST）。可以使用更具体的GetMapping、PostMapping等注解替代。<br />
+如果不指定，默认情况下任何请求方式都可以访问。<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240814232320.png" alt="" /></li>
 </ul>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 使用方法级别的@RequestMapping注解</span>
@@ -2356,6 +2812,28 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li><b><code>@RequestMapping</code></b>不用必须使用 / 开头</li>
+<li><b><code>@RequestMapping</code></b>可以同时指定多个URL路径，用数组表示，如：<code>@RequestMapping(value = &#123;&quot;/hello&quot;, &quot;/hi&quot;&#125;)</code></li>
+<li><b><code>@RequestMapping</code></b>可以同时指定多个请求方式，用数组表示，如：<code>@RequestMapping(value = &quot;/hello&quot;, method = &#123;RequestMethod.GET, RequestMethod.POST&#125;)</code></li>
+<li><b><code>@RequestMapping</code></b>支持模糊匹配，* 表示任意一层字符串，**表示任意层字符串。</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/hello/* -<span class="token operator">></span> /hello/world  /hello/world123 <span class="token punctuation">[</span>不可以是 /hello/world/123<span class="token punctuation">]</span>
+/hello/** -<span class="token operator">></span> /hello  /hello/world  /hello/world/123<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li>方法前必须加上<b><code>@RequestMapping</code></b>注解，就算类上已经添加了<b><code>@RequestMapping</code></b>注解，否则该方法将不会被识别成外部请求。</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloController</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@RequestMapping</span> <span class="token comment">// 不能省略， url: /hello </span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
 <h3 id="94-pagehelper分页插件"><a class="markdownIt-Anchor" href="#94-pagehelper分页插件"></a> 9.4 PageHelper分页插件</h3>
 <ul>
 <li><strong>导入依赖</strong>：<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
@@ -2759,7 +3237,7 @@ Cookie是由服务器生成并发送到客户端（浏览器）的小型文本�
         <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
 
-    <span class="token comment">// 获取Cookie</span>
+    <span class="token comment">// 获取Cookie 两种方法</span>
     <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/c2"</span><span class="token punctuation">)</span>
     <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">cookie2</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
         <span class="token class-name">Cookie</span><span class="token punctuation">[</span><span class="token punctuation">]</span> cookies <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getCookies</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -2771,7 +3249,12 @@ Cookie是由服务器生成并发送到客户端（浏览器）的小型文本�
         <span class="token punctuation">&#125;</span>
         <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"未找到指定Cookie"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/c3"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">cookie3</span><span class="token punctuation">(</span><span class="token annotation punctuation">@CookieValue</span><span class="token punctuation">(</span><span class="token string">"login_username"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> username<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><strong>Session</strong>：</p>
 <ol>
 <li>
@@ -4054,7 +4537,7 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">108.5k</span>
+                        class="white-color">112.6k</span>
             
             
             
