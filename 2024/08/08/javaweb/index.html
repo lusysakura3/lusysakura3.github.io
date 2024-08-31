@@ -419,21 +419,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-08-24
+                    2024-08-31
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    27.3k
+                    29.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    109 分
+                    117 分
                 </div>
                 
 
@@ -2761,6 +2761,10 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
      第三种情况：两个when都不满足 where 1=1 执行了otherwise
      --></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p><strong>注意事项</strong>：<br />
+在xml文件中，如果只传入一个参数时，可以直接写参数中的属性名来引用对应的属性值。若传入的是多个参数，在引用类中的属性值就必须在属性名前添加 <b>参数名. </b>来指定是哪个参数中的。</p>
+</blockquote>
 <h2 id="9-项目搭建"><a class="markdownIt-Anchor" href="#9-项目搭建"></a> 9. 项目搭建</h2>
 <h3 id="91-环境搭建"><a class="markdownIt-Anchor" href="#91-环境搭建"></a> 9.1 环境搭建</h3>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240814223026.png" alt="" /></p>
@@ -3079,9 +3083,8 @@ select emp_id,emp_name,emp_salary from t_emp where emp_id=#&#123;empId&#125;
 <li><strong>粒度</strong>：<code>@Value</code>用于注入单个属性值，而<code>@ConfigurationProperties</code>更适合注入一组相关的属性。</li>
 <li><strong>类型安全</strong>：<code>@ConfigurationProperties</code>支持类型安全的配置绑定，并且可以通过构建复杂对象来映射嵌套属性，而<code>@Value</code>只能注入简单的属性值。</li>
 <li><strong>可维护性</strong>：<code>@ConfigurationProperties</code>有助于将配置集中管理，并且对属性进行结构化处理，这对大型项目的配置管理更为友好。</li>
-</ul>
-<p><strong>选择建议</strong></p>
-<ul>
+<li><strong>@Value的局限性</strong>：<code>@Value</code>只能注入单个属性值，不能注入集合、数组等。<br />
+<strong>选择建议</strong></li>
 <li>当需要注入单个或少量的配置值时，使用<code>@Value</code>。</li>
 <li>当需要注入大量相关配置或希望将配置分组时，使用<code>@ConfigurationProperties</code>。</li>
 </ul>
@@ -3520,10 +3523,234 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240816202719.png" alt="" /></li>
 <li><strong>执行流程</strong>：<br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240816202805.png" alt="" /></li>
+<li><strong>多个拦截器执行顺序</strong>：
+<ol>
+<li><strong>preHandle() 方法</strong>：SpringMVC 会把所有拦截器收集到一起，然后按照配置顺序调用各个 preHandle() 方法。</li>
+<li><strong>postHandle() 方法</strong>：SpringMVC 会把所有拦截器收集到一起，然后按照配置相反的顺序调用各个 postHandle() 方法。</li>
+<li><strong>afterCompletion() 方法</strong>：SpringMVC 会把所有拦截器收集到一起，然后按照配置相反的顺序调用各个 afterCompletion() 方法。</li>
+</ol>
+</li>
 </ul>
 <h4 id="984-异常处理"><a class="markdownIt-Anchor" href="#984-异常处理"></a> 9.8.4 异常处理</h4>
 <p><img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240816202951.png" alt="" /><br />
 <img src="https://cdn.jsdelivr.net/gh/lusy37/Pictures@master/20240816203024.png" alt="" /></p>
+<h3 id="99-参数校验"><a class="markdownIt-Anchor" href="#99-参数校验"></a> 9.9 参数校验</h3>
+<blockquote>
+<p>在 Web 应用三层架构体系中，表述层负责接收浏览器提交的数据，业务逻辑层负责数据的处理。为了能够让业务逻辑层基于正确的数据进行处理，我们需要在表述层对数据进行检查，将错误的数据隔绝在业务逻辑层之外。</p>
+</blockquote>
+<p><strong>校验概述</strong><br />
+JSR 303 是 Java 为 Bean 数据合法性校验提供的标准框架，它已经包含在 JavaEE 6.0 标准中。JSR 303 通过在 Bean 属性上标注类似于 @NotNull、@Max 等标准的注解指定校验规则，并过标准的验证接口对Bean进行验证。</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b><code>@Null</code></b></td>
+<td>标注值必须为 null</td>
+</tr>
+<tr>
+<td><b><code>@NotNull</code></b></td>
+<td>标注值不可为 null</td>
+</tr>
+<tr>
+<td><b><code>@AssertTrue</code></b></td>
+<td>标注值必须为 true</td>
+</tr>
+<tr>
+<td><b><code>@AssertFalse</code></b></td>
+<td>标注值必须为 false</td>
+</tr>
+<tr>
+<td><b><code>@Min(value)</code></b></td>
+<td>标注值必须大于或等于 value</td>
+</tr>
+<tr>
+<td><b><code>@Max(value)</code></b></td>
+<td>标注值必须小于或等于 value</td>
+</tr>
+<tr>
+<td><b><code>@DecimalMin(value)</code></b></td>
+<td>标注值必须大于或等于 value</td>
+</tr>
+<tr>
+<td><b><code>@DecimalMax(value)</code></b></td>
+<td>标注值必须小于或等于 value</td>
+</tr>
+<tr>
+<td><b><code>@Size(max,min)</code></b></td>
+<td>标注值大小必须在 max 和 min 限定的范围内</td>
+</tr>
+<tr>
+<td><b><code>@Digits(integer,fratction)</code></b></td>
+<td>标注值值必须是一个数字，且必须在可接受的范围内</td>
+</tr>
+<tr>
+<td><b><code>@Past</code></b></td>
+<td>标注值只能用于日期型，且必须是过去的日期</td>
+</tr>
+<tr>
+<td><b><code>@Future</code></b></td>
+<td>标注值只能用于日期型，且必须是将来的日期</td>
+</tr>
+<tr>
+<td><b><code>@Pattern(value)</code></b></td>
+<td>标注值必须符合指定的正则表达式</td>
+</tr>
+</tbody>
+</table>
+<p>JSR 303 只是一套标准，需要提供其实现才可以使用。Hibernate Validator 是 JSR 303 的一个参考实现，除支持所有标准的校验注解外，它还支持以下的扩展注解：</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b><code>@Email</code></b></td>
+<td>标注值必须是格式正确的 Email 地址</td>
+</tr>
+<tr>
+<td><b><code>@Length</code></b></td>
+<td>标注值字符串大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td><b><code>@NotEmpty</code></b></td>
+<td>标注值字符串不能是空字符串</td>
+</tr>
+<tr>
+<td><b><code>@Range</code></b></td>
+<td>标注值必须在指定的范围内</td>
+</tr>
+</tbody>
+</table>
+<p>Spring 4.0 版本已经拥有自己独立的数据校验框架，同时支持 JSR 303 标准的校验框架。Spring 在进行数据绑定时，可同时调用校验框架完成数据校验工作。在SpringMVC 中，可直接通过注动 <b><code>@EnableWebMvc</code></b> 的方式进行数据校验。Spring 的 LocalValidatorFactoryBean 既实现了 Spring 的 Validator 接口，也实现了 JSR 303 的 Validator 接口。只要在Spring容器定义一个LocalValidatorFactoryBean，即可将其注入到需要数据校验的 Bean中。Spring本身并没有提供JSR 303的实现，所以必须将JSR 303的实现者的jar包放到类路径下。</p>
+<p>配置 <b><code>@EnableWebMvc</code></b> 后，SpringMVC 会默认装配好一个 LocalValidatorFactoryBean，通过在处理方法的入参上标注 @Validated 注解即可让 SpringMVC 在完成数据绑定后执行数据校验的作。<br />
+<strong>操作演示</strong></p>
+<ul>
+<li><strong>导入依赖</strong></li>
+</ul>
+  <pre class="line-numbers language-XML" data-language="XML"><code class="language-XML">&lt;!-- 校验注解 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;jakarta.platform&lt;&#x2F;groupId&gt;
+    &lt;artifactId&gt;jakarta.jakartaee-web-api&lt;&#x2F;artifactId&gt;
+    &lt;version&gt;9.1.0&lt;&#x2F;version&gt;
+    &lt;scope&gt;provided&lt;&#x2F;scope&gt;
+&lt;&#x2F;dependency&gt;
+
+&lt;!-- 校验注解实现--&gt;        
+&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;org.hibernate.validator&#x2F;hibernate-validator --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.hibernate.validator&lt;&#x2F;groupId&gt;
+    &lt;artifactId&gt;hibernate-validator&lt;&#x2F;artifactId&gt;
+    &lt;version&gt;8.0.0.Final&lt;&#x2F;version&gt;
+&lt;&#x2F;dependency&gt;
+&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;org.hibernate.validator&#x2F;hibernate-validator-annotation-processor --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.hibernate.validator&lt;&#x2F;groupId&gt;
+    &lt;artifactId&gt;hibernate-validator-annotation-processor&lt;&#x2F;artifactId&gt;
+    &lt;version&gt;8.0.0.Final&lt;&#x2F;version&gt;
+&lt;&#x2F;dependency&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>应用校验注解</strong></li>
+</ul>
+  <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import org.hibernate.validator.constraints.Length;
+
+&#x2F;**
+ * projectName: com.atguigu.pojo
+ *&#x2F;
+public class User &#123;
+    &#x2F;&#x2F;age   1 &lt;&#x3D;  age &lt; &#x3D; 150
+    @Min(10)
+    private int age;
+
+    &#x2F;&#x2F;name 3 &lt;&#x3D; name.length &lt;&#x3D; 6
+    @Length(min &#x3D; 3,max &#x3D; 10)
+    private String name;
+
+    &#x2F;&#x2F;email 邮箱格式
+    @Email
+    private String email;
+
+    public int getAge() &#123;
+        return age;
+    &#125;
+
+    public void setAge(int age) &#123;
+        this.age &#x3D; age;
+    &#125;
+
+    public String getName() &#123;
+        return name;
+    &#125;
+
+    public void setName(String name) &#123;
+        this.name &#x3D; name;
+    &#125;
+
+    public String getEmail() &#123;
+        return email;
+    &#125;
+
+    public void setEmail(String email) &#123;
+        this.email &#x3D; email;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>handler标记和绑定错误收集</strong></li>
+</ul>
+  <pre class="line-numbers language-Java" data-language="Java"><code class="language-Java">@RestController
+@RequestMapping(&quot;user&quot;)
+public class UserController &#123;
+
+    &#x2F;**
+     * @Validated 代表应用校验注解! 必须添加!
+     *&#x2F;
+    @PostMapping(&quot;save&quot;)
+    public Object save(@Validated @RequestBody User user,
+                       &#x2F;&#x2F;在实体类参数和 BindingResult 之间不能有任何其他参数, BindingResult可以接受错误信息,避免信息抛出!
+                       BindingResult result)&#123;
+       &#x2F;&#x2F;判断是否有信息绑定错误! 有可以自行处理!
+        if (result.hasErrors())&#123;
+            System.out.println(&quot;错误&quot;);
+            String errorMsg &#x3D; result.getFieldError().toString();
+            return errorMsg;
+        &#125;
+        &#x2F;&#x2F;没有,正常处理业务即可
+        System.out.println(&quot;正常&quot;);
+        return user;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><strong>测试效果</strong><br />
+<img src="https://secure2.wostatic.cn/static/oXLwvcaMaLc4TggmPFNToV/image.png?auth_key=1724517030-iDRnH6dkdc56wHJRoTSLmQ-0-4a74de68941be939573820ba54202593" alt="" /></li>
+</ul>
+<blockquote><p><strong>易混总结</strong><br />
+@NotNull、@NotEmpty、@NotBlank 都是用于在数据校验中检查字段值是否为空的注解，但是它们的用法和校验规则有所不同。</p>
+<ol>
+<li>
+<p>@NotNull  (包装类型不为null)</p>
+<p>@NotNull 注解是 JSR 303 规范中定义的注解，当被标注的字段值为 null 时，会认为校验失败而抛出异常。该注解不能用于字符串类型的校验，若要对字符串进行校验，应该使用 @NotBlank 或 @NotEmpty 注解。</p>
+</li>
+<li>
+<p>@NotEmpty (集合类型长度大于0)</p>
+<p>@NotEmpty 注解同样是 JSR 303 规范中定义的注解，对于 CharSequence、Collection、Map 或者数组对象类型的属性进行校验，校验时会检查该属性是否为 Null 或者 size()==0，如果是的话就会校验失败。但是对于其他类型的属性，该注解无效。需要注意的是只校验空格前后的字符串，如果该字符串中间只有空格，不会被认为是空字符串，校验不会失败。</p>
+</li>
+<li>
+<p>@NotBlank （字符串，不为null，切不为&quot;  &quot;字符串）</p>
+<p>@NotBlank 注解是 Hibernate Validator 附加的注解，对于字符串类型的属性进行校验，校验时会检查该属性是否为 Null 或 “” 或者只包含空格，如果是的话就会校验失败。需要注意的是，@NotBlank 注解只能用于字符串类型的校验。</p>
+</li>
+</ol>
+<p>总之，这三种注解都是用于校验字段值是否为空的注解，但是其校验规则和用法有所不同。在进行数据校验时，需要根据具体情况选择合适的注解进行校验。</p>
+</blockquote>
 <h2 id="10-事务管理"><a class="markdownIt-Anchor" href="#10-事务管理"></a> 10. 事务管理</h2>
 <h3 id="101-事务回顾"><a class="markdownIt-Anchor" href="#101-事务回顾"></a> 10.1 事务回顾</h3>
 <ul>
@@ -4537,7 +4764,7 @@ Filter可以根据需求，配置不同的拦截资源路径：</p>
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">112.6k</span>
+                        class="white-color">114.3k</span>
             
             
             
