@@ -428,14 +428,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-05-16
+                    2024-10-20
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    25k
+                    25.1k
                 </div>
                 
 
@@ -1318,9 +1318,10 @@ Thread-2: 2
 <li>任务的性质
 <ul>
 <li>CPU密集型任务：任务以内存中的计算为主。避免线程上下文切换的成本。一般CPU是N核，就开N+1个线程</li>
-<li>IO密集型任务：尽量多开启一些线程并发做IO操作。因为在IO过程中，CPU几乎是闲置的。一般可能是2*CPU核数,当然根据下面的标准公式计算会好一些：<br />
-$ \text{最大并行数} \times \text{期望CPU利用率} \times \frac{\text{总时间} (\text{CPU计算时间} + \text{等待时间})}{\text{CPU计算时间}} $</li>
+<li>IO密集型任务：尽量多开启一些线程并发做IO操作。因为在IO过程中，CPU几乎是闲置的。一般可能是2*CPU核数,当然根据下面的标准公式计算会好一些：</li>
 </ul>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>最大并行数</mtext><mo>×</mo><mtext>期望CPU利用率</mtext><mo>×</mo><mfrac><mrow><mtext>总时间</mtext><mo stretchy="false">(</mo><mtext>CPU计算时间</mtext><mo>+</mo><mtext>等待时间</mtext><mo stretchy="false">)</mo></mrow><mtext>CPU计算时间</mtext></mfrac></mrow><annotation encoding="application/x-tex">\text{最大并行数} \times \text{期望CPU利用率} \times \frac{\text{总时间} (\text{CPU计算时间} + \text{等待时间})}{\text{CPU计算时间}} 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord text"><span class="mord cjk_fallback">最大并行数</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord text"><span class="mord cjk_fallback">期望</span><span class="mord">CPU</span><span class="mord cjk_fallback">利用率</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">CPU</span><span class="mord cjk_fallback">计算时间</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">总时间</span></span><span class="mopen">(</span><span class="mord text"><span class="mord">CPU</span><span class="mord cjk_fallback">计算时间</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord text"><span class="mord cjk_fallback">等待时间</span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 </li>
 <li>任务的优先级【高中低】：优先级不同的任务可以使用优先队列<code>PriorityBlockingQueue</code>来处理。它可以让优先级高的任务先执行。</li>
 <li>任务的执行时间【长中短】：根据任务的执行时间、设置核心线程数、最大线程数、队列容量等参数，来确定线程池的配置。【当然，过大的线程池可能会导致系统资源过度占用，需要根据实际情况进行合理配置】</li>
@@ -3258,7 +3259,7 @@ test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">134.6k</span>
+                        class="white-color">134.7k</span>
             
             
             
