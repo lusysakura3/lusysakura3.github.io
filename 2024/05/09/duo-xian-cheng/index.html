@@ -428,21 +428,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-10-20
+                    2024-10-21
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    25.1k
+                    25.2k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    96 分
+                    97 分
                 </div>
                 
 
@@ -587,8 +587,35 @@ class文件会通过类加载器加载到内存空间。<br />
 <li>无参时当前线程进入等待状态，有参时指定线程进入等待状态。</li>
 <li>调用前不需要获得任何锁。</li>
 <li>若调用前持有对象锁，并不会释放持有的对象锁。</li>
-<li>调用LockSupport.park()方法，需要等待<code>LockSupport.unpark(Thread thread)</code>方法唤醒。</li>
+<li>调用LockSupport.park()方法，需要等待<code>LockSupport.unpark(Thread thread)</code>方法唤醒，这种方式唤醒打断标记为false。</li>
+<li>也可以使用thread.interrupt()进行唤醒，但是这样子打断标记会标记为true。</li>
 </ul>
+<blockquote>
+<ul>
+<li>如果打断标记已经是 true, 则 park 会失效</li>
+<li>如果在 park 之前调用了 unpark 方法，那么 park 将不会使线程进入等待状态，而是继续执行，也就是说 unpark 方法可以提前调用</li>
+</ul>
+</blockquote>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"park..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">LockSupport</span><span class="token punctuation">.</span><span class="token function">park</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"unpark..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"打断状态："</span> <span class="token operator">+</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isInterrupted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//打断状态：true</span>
+        <span class="token class-name">LockSupport</span><span class="token punctuation">.</span><span class="token function">park</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"unpark..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token string">"t1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    t1<span class="token punctuation">.</span><span class="token function">interrupt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">////打断状态：true</span>
+    <span class="token comment">//LockSupport.unpark(t1);//打断状态：false</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">/**输出：
+ * park...
+ * unpark...
+ * 打断状态：true
+ * unpark...
+ */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 </ul>
 </li>
@@ -741,7 +768,7 @@ class文件会通过类加载器加载到内存空间。<br />
 </tr>
 <tr>
 <td><code>public final void run()</code></td>
-<td>线程的执行体，包含了线程需要执行的任务逻【直接调用run()方法，并不创建一个新线程，只是在当前线程中执行 run() 方法的内容】辑。</td>
+<td>线程的执行体，包含了线程需要执行的任务逻【直接调用run()方法，并不创建一个新线程，只是在当前线程中执行 run() 方法的内容】</td>
 </tr>
 <tr>
 <td><code>static void sleep(long millis)</code></td>
@@ -3259,7 +3286,7 @@ test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">134.7k</span>
+                        class="white-color">134.9k</span>
             
             
             
