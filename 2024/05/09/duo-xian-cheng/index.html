@@ -428,21 +428,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="fa fa-history fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-10-21
+                    2024-10-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    25.2k
+                    25.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    97 分
+                    98 分
                 </div>
                 
 
@@ -775,8 +775,12 @@ class文件会通过类加载器加载到内存空间。<br />
 <td>使当前线程暂停执行指定的毫秒数。调用sleep()方法会使当前线程进入超时等待状态，不会释放持有的锁。如果在sleep期间被其他线程中断，则会抛出InterruptedException异常，并且清除当前线程的中断状态。</td>
 </tr>
 <tr>
-<td><code>public void interrupt()</code></td>
+<td><code>public static boolean interrupt()</code></td>
 <td>中断线程。调用该方法会将线程的中断状态设置为true，如果当前线程正在sleep、wait、join等方法中阻塞，则会立即抛出InterruptedException异常并清除中断状态。</td>
+</tr>
+<tr>
+<td><code>public boolean isInterrupt()</code></td>
+<td>中断线程。调用该方法会将线程的中断状态设置为true，如果当前线程正在sleep、wait、join等方法中阻塞，则会立即抛出InterruptedException异常但不会清除中断状态。</td>
 </tr>
 <tr>
 <td><code>void setPriority(int newPriority)</code></td>
@@ -1421,7 +1425,7 @@ Thread-2: 2
 </ul>
 <blockquote>
 <p><strong>总结</strong>：<br />
-<strong>synchronized</strong>可以保证原子性、可见性和有序性。<br />
+<strong>synchronized</strong>可以保证原子性、可见性和有序性。（这里的有序性是有限的）<br />
 <strong>volatile关键字</strong>可以保证可见性、有序性，对于单独的volatile变量的读写操作，也能保证原子性。然而，volatile 不能保证复合操作的原子性，比如 volatile int a = 0; a++; 这种情况并不是原子的。需要使用 AtomicInteger 等原子类来保证原子性。<br />
 <strong>Lock锁机制</strong>可以同时保证以上三个特性，但需要手动管理锁的获取和释放。因此，在不需要Lock特定功能的情况下，一般推荐使用synchronized。</p>
 </blockquote>
@@ -1848,7 +1852,7 @@ JVM会对指令优化，也就是重排序，新的顺序为（1）（3）（2�
 <h3 id="72synchronized锁"><a class="markdownIt-Anchor" href="#72synchronized锁"></a> 7.2.synchronized锁</h3>
 <p>我们知道，在Java中，<code>每一个对象都有一把唯一的锁</code>，这也是synchronized实现线程同步的基础。【唯一的锁也就是对象的监视器锁，也称为内部锁或互斥锁】</p>
 <blockquote>
-<p><code>synchronized</code>是<code>基于对象头加锁</code>的，它的作用是<code>保证了原子性、可见性、有序性</code><br />
+<p><code>synchronized</code>是<code>基于对象头加锁</code>的，它的作用是<code>保证了原子性、可见性、有序性</code>（这里的有序性是有限的）<br />
 特别注意：<mark>不是对代码加锁，所说的加锁操作就是给这个对象的对象头里设置了一个标志位</mark>，一个对象在同一时间只能有一个线程获取到该对象的锁。如果锁已经被其他线程获取，那么当前线程就会进入到阻塞状态，直到它获取到了锁。</p>
 </blockquote>
 <h4 id="同步原理"><a class="markdownIt-Anchor" href="#同步原理"></a> 同步原理</h4>
@@ -3217,60 +3221,6 @@ test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
     
 <footer class="page-footer bg-color">
     
-        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
-<style>
-    .aplayer .aplayer-lrc p {
-        
-        display: none;
-        
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 16px !important;
-    }
-
-    .aplayer .aplayer-lrc p.aplayer-lrc-current {
-        
-        display: none;
-        
-        font-size: 15px;
-        color: #42b983;
-    }
-
-    
-    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
-        left: -66px !important;
-    }
-
-    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
-        left: 0px !important;
-    }
-
-    
-</style>
-<div class="">
-    
-    <div class="row">
-        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
-                   server="netease"
-                   type="playlist"
-                   id="503838841"
-                   fixed='true'
-                   autoplay='false'
-                   theme='#42b983'
-                   loop='all'
-                   order='random'
-                   preload='auto'
-                   volume='0.7'
-                   list-folded='true'
-        >
-        </meting-js>
-    </div>
-</div>
-
-<script src="/libs/aplayer/APlayer.min.js"></script>
-<script src="/libs/aplayer/Meting.min.js"></script>
-
-    
 
     <div class="container row center-align"
          style="margin-bottom: 15px !important;">
@@ -3286,7 +3236,7 @@ test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">134.9k</span>
+                        class="white-color">135k</span>
             
             
             
